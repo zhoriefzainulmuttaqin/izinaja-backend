@@ -48,8 +48,6 @@ const layananSerializer = new JSONAPISerializer('layanan', {
 
 });
 
-// Retrieve all layanans from the database.
-
 exports.findAll = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -58,7 +56,7 @@ exports.findAll = async (req, res) => {
 
     const keyword = req.query.keyword || '';
 
-    // Query pencarian
+    // pencarian
     const searchQuery = {
       where: {
         [Op.or]: [
@@ -92,9 +90,6 @@ exports.findAll = async (req, res) => {
 };
 
 
-
-
-// Find a single layanan with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
@@ -116,8 +111,7 @@ exports.findOne = (req, res) => {
       });
     });
 };
-// Update a layanan by the id in the request
-// Update a layanan by the id in the request
+
 exports.update = async (req, res) => {
   const id = req.params.id;
   const file = req.file;

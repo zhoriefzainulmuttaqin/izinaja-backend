@@ -49,29 +49,32 @@ const testimoniSerializer = new JSONAPISerializer('testimoni', {
 // Retrieve all testimonis from the database.
 exports.findAll = async (req, res) => {
   try {
-    // Mendapatkan nilai halaman dan ukuran halaman dari query string (default ke halaman 1 dan ukuran 10 jika tidak disediakan)
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
-    
-    // Menghitung offset berdasarkan halaman dan ukuran halaman
     const offset = (page - 1) * pageSize;
 
-    // Mengambil data testimoni dengan pagination menggunakan Sequelize
-    const testimonis = await Testimoni.findAll({
+    const keyword = req.query.keyword || '';
+
+    // pencarian
+    const searchQuery = {
+      where: {
+        [Op.or]: [
+          { nama: { [Op.like]: `%${keyword}%` } },
+          { testimoni: { [Op.like]: `%${keyword}%` } },
+          { jabatan: { [Op.like]: `%${keyword}%` } }
+        ]
+      },
       limit: pageSize,
       offset: offset
-    });
+    };
 
-    // Menghitung total jumlah testimoni
-    const totalCount = await Testimoni.count();
+    // Mengambil data testimoni dengan pagination dan pencarian menggunakan Sequelize
+    const testimonis = await Testimoni.findAll(searchQuery);
+    const totalCount = await Testimoni.count(searchQuery);
 
-    // Menghitung total jumlah halaman berdasarkan ukuran halaman
     const totalPages = Math.ceil(totalCount / pageSize);
-
-    // Menggunakan serializer untuk mengubah data menjadi JSON
     const testimoni = testimoniSerializer.serialize(testimonis);
 
-    // Kirim response dengan data JSON dan informasi pagination
     res.send({
       data: testimoni,
       currentPage: page,
@@ -84,6 +87,7 @@ exports.findAll = async (req, res) => {
     res.status(500).send({ message: 'Error retrieving testimonis.' });
   }
 };
+
 
 
 // Find a single testimoni with an id

@@ -47,29 +47,31 @@ exports.create = async (req, res) => {
 // Retrieve all transaksis from the database.
 exports.findAll = async (req, res) => {
   try {
-    // Mendapatkan nilai halaman dan ukuran halaman dari query string (default ke halaman 1 dan ukuran 10 jika tidak disediakan)
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
-    
-    // Menghitung offset berdasarkan halaman dan ukuran halaman
     const offset = (page - 1) * pageSize;
 
-    // Mengambil data transaksi dengan pagination menggunakan Sequelize
-    const transaksis = await Transaksi.findAll({
+    const keyword = req.query.keyword || '';
+
+    // pencarian
+    const searchQuery = {
+      where: {
+        [Op.or]: [
+          { phone: { [Op.like]: `%${keyword}%` } },
+          { domisili: { [Op.like]: `%${keyword}%` } },
+        ]
+      },
       limit: pageSize,
       offset: offset
-    });
+    };
 
-    // Menghitung total jumlah transaksi
-    const totalCount = await Transaksi.count();
+    // Mengambil data transaksi dengan pagination dan pencarian menggunakan Sequelize
+    const transaksis = await Transaksi.findAll(searchQuery);
+    const totalCount = await Transaksi.count(searchQuery);
 
-    // Menghitung total jumlah halaman berdasarkan ukuran halaman
     const totalPages = Math.ceil(totalCount / pageSize);
-
-    // Menggunakan serializer untuk mengubah data menjadi JSON
     const transaksi = transaksiSerializer.serialize(transaksis);
 
-    // Kirim response dengan data JSON dan informasi pagination
     res.send({
       data: transaksi,
       currentPage: page,
@@ -82,6 +84,7 @@ exports.findAll = async (req, res) => {
     res.status(500).send({ message: 'Error retrieving transaksis.' });
   }
 };
+
 
 // Find a single admin with an id
 exports.findOne = (req, res) => {
