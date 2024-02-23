@@ -7,39 +7,38 @@ const multer = require('multer');
 
 exports.create = async (req, res) => {
   try {
-    const file = req.files;
+    const ktpNameSatu = req.file.filename;
+    const ktpNameDua = req.file.filename;
+    const npwpNameSatu = req.file.filename;
+    const npwpNameDua = req.file.filename;
 
-      // Ambil nama file dan buat URL gambar
-      const ktpNameSatu = `${file.filename}`;
-      const ktpNameDua = `${file.filename}`;
-      const NpwpNameSatu = `${file.filename}`;
-      const NpwpNameDua = `${file.filename}`;
-      // const npwpName = files.find(file => files.fieldname == 'npwp').filename;
+    const KtpSatuUrl = `${req.protocol}://${req.get('host')}/transaksi/${ktpNameSatu}`;
+    const KtpDuaUrl = `${req.protocol}://${req.get('host')}/transaksi/${ktpNameDua}`;
+    const NpwpSatuUrl = `${req.protocol}://${req.get('host')}/transaksi/${npwpNameSatu}`;
+    const NpwpDuaUrl = `${req.protocol}://${req.get('host')}/transaksi/${npwpNameDua}`;
 
-      const ktpImageUrl = `${req.protocol}://${req.get('host')}/transaksi/${ktpNameSatu}`;
-      const npwpImageUrl = `${req.protocol}://${req.get('host')}/transaksi/${npwpName}`;
+    const transaksi = {
+      id_layanan: req.body.id_layanan,
+      ktp_satu: KtpSatuUrl,
+      ktp_dua: KtpDuaUrl,
+      npwp_satu: NpwpSatuUrl,
+      npwp_dua: NpwpDuaUrl,
+      phone: req.body.phone,
+      domisili: req.body.domisili,
+      status_transaksi: 1,
+    };
 
-      const transaksi = {
-        id_transaksi: req.body.id_transaksi,
-        ktp: ktpName,
-        npwp: npwpName,
-        url_ktp: ktpImageUrl,
-        url_npwp: npwpImageUrl,
-        phone: req.body.phone,
-        domisili: req.body.domisili,
-        status_transaksi: 1,
-      };
-      // Respon sukses jika semuanya berhasil
     const newTransaksi = await Transaksi.create(transaksi);
-    res.status(201).send(newTransaksi); // Atau respons yang diinginkan
+    res.status(201).send(newTransaksi);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
 }
 
 
+
   const transaksiSerializer = new JSONAPISerializer('transaksi', {
-    attributes: ['id_transaksi', 'ktp_satu', 'ktp_dua', 'npwp_satu', 'npwp_dua', 'url_ktp_satu', 'url_ktp_dua', 'url_npwp_satu', 'url_npwp_dua', 'phone', 'domisili'],
+    attributes: ['id_layanan', 'ktp_satu', 'ktp_dua', 'npwp_satu', 'npwp_dua', 'url_ktp_satu', 'url_ktp_dua', 'url_npwp_satu', 'url_npwp_dua', 'phone', 'domisili'],
     keyForAttribute: 'camelCase',
 
   });
