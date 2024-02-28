@@ -1,8 +1,8 @@
 module.exports = {
-  HOST: "process.env.DB_HOST",
-  USER: "process.env.DB_USERNAME",
-  PASSWORD: "process.env.DB_PASSWORD",
-  DB: "process.env.DB_DBNAME",
+  HOST: "srv596.hstgr.io",
+  USER: "u610515881_ngurusizin",
+  PASSWORD: "U610515881_ngurusizin",
+  DB: "u610515881_ngurusizin",
   dialect: "mysql",
   pool: {
     max: 5,
