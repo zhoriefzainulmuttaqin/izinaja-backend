@@ -18,7 +18,7 @@ db.sequelize.sync()
   });
 
 var corsOptions = {
-  origin: "https://izinaja-backend.vercel.app/"
+  origin: "http://localhost:3000"
 };
 
 app.use(cors(corsOptions));
