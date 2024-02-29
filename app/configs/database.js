@@ -1,13 +1,18 @@
-module.exports = {
-  HOST: "srv596.hstgr.io",
-  USER: "u610515881_ngurusizin",
-  PASSWORD: "U610515881_ngurusizin",
-  DB: "u610515881_ngurusizin",
-  dialect: "mysql",
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-};
+const mysql = require('mysql2')
+
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DBNAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
+
+pool.getConnection((err, conn) => {
+  if(err) console.log(err);
+  console.log("Berhasil Terkoneksi");
+})
+
+module.exports = pool.promise()
