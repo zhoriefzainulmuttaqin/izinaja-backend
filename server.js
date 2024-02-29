@@ -17,11 +17,11 @@ db.sequelize.sync()
     console.log("Failed to sync db: " + err.message);
   });
 
-var corsOptions = {
-  origin: "http://localhost:3000"
-};
+// var corsOptions = {
+//   origin: "http://localhost:3000"
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 
 // parse requests of content-type - application/json
@@ -43,7 +43,7 @@ require("./app/routes/testimoni")(app);
 require("./app/routes/administrators")(app);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}.`);
+// });
